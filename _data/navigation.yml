@@ -1,9 +1,7 @@
 # main links
 main:
-  - title: "블로그 방문하기"
+  - title: "HOME"
     url: https://minglebros.github.io
-  - title: "윤동주"
-    url: /categories/윤동주/
   - title: "Categories"
     url: /categories/
   - title: "About"
