@@ -9,6 +9,9 @@ tags:
   - Golang
   - test-driven
   - testing
+classes: wide
+toc: true
+toc_sticky: true
 last_modified_at: 2020-03-14T20:00:00
 ---
 # Golang Automated Test
