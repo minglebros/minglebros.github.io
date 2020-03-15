@@ -9,13 +9,11 @@ tags:
   - Golang
   - test-driven
   - testing
-classes: wide
-toc: true
-toc_sticky: true
 last_modified_at: 2020-03-14T20:00:00
 ---
-# Golang Automated Test
-## Automated Test
+
+## Golang Automated Test
+
  자동 테스트는 기본 프로그램의 구성 요소를 실행하고 예상대로 작동하는지 확인하는 별도의 프로그램이다.
   자동 테스트는 코드를 변경 한 후에도 프로그램 구성 요소가 올바르게 작동하는지 확인한다. Go의 테스트 패키지 및 Go 테스트 도구를 사용하면 자동 테스트를 쉽게 작성할 수 있다. 자동화 테스트를 통해 메뉴얼하게 테스트하는 시간을 줄이고 더 철저하게 테스트를 할 수 있다.
 아래 코드는 headfirstgo 책에 나온 예제 코드로써 strings.Join 함수를 사용한다.이 함수는 문자열 조각과 문자열을 모두 함께 결합한다. Join은 슬라이스의 모든 항목이 결합 된 단일 문자열을 반환한다.
@@ -88,12 +86,14 @@ ok  	github.com/headfirstgo/prose	0.743s
 위 코드는 테스트할 데이터와 테스트가 성공할 때 return하는 데이터를 가질 수 있는 `testData` 구조체를 정의한다. `tests` slice 변수에 `testData` 구조체 형식의 테스트 데이터를 할당하여 `JoinWithCommas` 함수를 테스트한다.
 
 ## Test-driven Development
+
 테스트 중심 개발
 1. 테스트 작성 : 아직 존재하지 않더라도 원하는 기능에 대한 테스트를 작성한다. 그런 다음 테스트를 실행하여 실패했는지 확인한다.
 2. 전달 : 기본 코드에서 기능을 구현한다. 작성하는 코드가 비효율적인지 걱정하지 말고 작동시키는 코드를 만들어 테스트를 실행하여 통과하는지 확인한다.
 3. 코드 리팩토링 : 이제 코드를 리팩토링하고 코드를 변경 및 개선 할 수 있다.
 
 ### Example
+
 `JoinWithCommas` 함수에 데이터가 들어있지 않는 빈 `testData`가 들어가면 어떻게 될까? 테스트 중심 개발은 `JoinWithCommas` 함수를 수정하기 전에 테스트 코드를 작성한다. 비어있는 `testData`를 넣어 테스트를 해보자.
 ```go
 ...
