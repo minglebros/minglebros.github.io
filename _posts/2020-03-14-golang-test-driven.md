@@ -4,6 +4,7 @@ excerpt: "Golang에서 어떻게 Unit 테스트를 개발하는지 살펴보자"
 
 categories:
   - golang
+author: MinSik Kim
 tags:
   - golang
   - Golang
