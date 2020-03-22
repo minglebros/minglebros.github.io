@@ -10,17 +10,11 @@ MinSik Kim:
       icon: "fas fa-fw fa-link"
       url: "https://minglebros.github.io"
 
-Cornelius Fiddlebone:
-  name        : "Cornelius Fiddlebone"
-  bio         : "I ordered what?"
-  avatar      : "/assets/images/bio-photo.jpg"
+Kubernetes:
+  name        : "Kubernetes"
+  bio         : "Let's deep dive into kubernetes"
+  avatar      : "/assets/images/kubernetes.png"
   links:
-    - label: "Email"
-      icon: "fas fa-fw fa-envelope-square"
-      url: "mailto:cornelius@thewhip.com"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/rhymeswithsackit"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/minglebros"
+      url: "https://github.com/kubernetes/kubernetes"

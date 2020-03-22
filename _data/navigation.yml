@@ -2,6 +2,8 @@
 main:
   - title: "HOME"
     url: https://minglebros.github.io
+  - title: "Kubernetes"
+    url: /categories/kubernetes/
   - title: "Categories"
     url: /categories/
   - title: "About"
