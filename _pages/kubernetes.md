@@ -6,4 +6,4 @@ author: Kubernetes
 taxonomy: kubernetes
 ---
 
-Mingle Kubernetes
+Let's mingle Kubernetes
