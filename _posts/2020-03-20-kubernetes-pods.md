@@ -10,7 +10,6 @@ tags:
   - pods
   - pod
   - docker
-  - 쿠버네티스
 classes: wide
 last_modified_at: 2020-03-20T15:00:00
 ---
@@ -46,3 +45,114 @@ Pod은 자기만의 커널 네임스페이스뿐만 아니라 리눅스의 cgrou
 
 ### Pod만으로는 한계가 있다
 k8s에서 Pod 자체로는 장애나 부하 발생 시 자동 복구나 자동 스케일링이 동작하지 않는다. 이후에 살펴볼 `Deployments`나 `DemonSets` 컨트롤러를 통해 Pod의 장애가 발생 시 Pod를 재스케쥴링하여 장애를 처리하게 된다. 이번 글에서는 Pod 자체를 설명하기 위해 `Deployments`나 `DemonSets` 컨트롤러를 사용하지 않고 `kind: Pod`만을 사용하여 예제를 작성하였다.
+
+### Pod Manifest File
+Pod의 Manifest 파일을 간단하게 살펴보자.
+```yml
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mingle-pod
+  namespace: default
+  labels:
+    version: v1
+    zone: mingle
+spec:
+  containers:
+  - name: mingle-web
+    image: registry.hub.docker.com/library/nginx:1.15
+    ports:
+    - containerPort: 80
+```
+Manifest 파일을 살펴보면 상위의 4개의 리소스를 볼수 있을 것이다.
+- apiVersion
+- kind
+- metadata
+- spec
+
+`apiVersion`은 API group과 API version으로 구성된다. `<api-group>/<api-version>` 같은 방식으로 정의되는데 위의 예제에서는 `v1`으로 정의된 것을 볼수 있다. Pod같은 경우에는 `api-group`을 생략할 수 있는 core 그룹에 속해 있기 때문에 `v1`으로 정의할 수 있다. 나중에 살펴보겠지만 storage 클래스같은 경우에는 `storage.k8s.io/v1`으로 정의해야 한다.
+
+`kind`는 k8s 클러스터에 배포하는 object를 말한다. (ex) Pod, Service, DeamonSets, Deployments)
+
+`metadata`는 클러스터에 배포된 object를 구분시켜 주는 역할을 한다. 위의 예제에서는 이름과 라벨을 붙여 object간의 의존성을 낮추고 구분시켜 주었다. 라벨은 단순히 key-value 쌍으로 구성되지만 나중에 라벨이 굉장히 중요한 역할을 한다는 것을 알게 될 것이다. 이름과 라벨외에도 다수의 가상 클러스터를 제공할 수 있는 개념인 `namespace`를 정의하여 `mingle` 공간에 pod를 배포하였다. `namespace`를 정의하지 않으면 default namespace로 배포된다.
+
+`spec`는 Pod에 배포되는 container의 정보를 정의하는 리소스이다. 간단히 이름과 배포할 docker 이미지와 노출할 포트를 정의하였다. 여기서는 하나의 container를 정의했지만 Pod안에 여러개의 container를 배포할려면 하나의 container를 더 정의하면 된다.
+
+### Manifest파일로 Pod 배포
+그럼 이제 Manifest파일을 생성하여 kubernetes 클러스터에 Pod를 배포해보자.
+```bash
+$ kubectl create -f pod.yml
+pod/mingle-pod created
+
+$ kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+mingle-pod   1/1     Running   0          40m
+
+$ kubectl get pods mingle-pod -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  ....
+
+$ kubectl describe pods mingle-pod
+Name:         mingle-pod
+Namespace:    default
+Priority:     0
+Node:         kinx-k8s-node-1/192.168.88.24
+Start Time:   Thu, 26 Mar 2020 22:06:21 +0900
+Labels:       version=v1
+              zone=mingle
+Annotations:  <none>
+Status:       Running
+IP:           10.233.67.14
+Containers:
+  mingle-web:
+    ....
+Events:
+  Type    Reason     Age   From                      Message
+  ----    ------     ----  ----                      -------
+  Normal  Scheduled  38m   default-scheduler         Successfully assigned default/mingle-pod to kinx-k8s-node-1
+  Normal  Pulled     38m   kubelet, kinx-k8s-node-1  Container image "registry.hub.docker.com/library/nginx:1.15" already present on machine
+  Normal  Created    38m   kubelet, kinx-k8s-node-1  Created container mingle-web
+  Normal  Started    38m   kubelet, kinx-k8s-node-1  Started container mingle-web
+```
+kubectl `create` 명령어와 `-f`옵션에 manifest 파일을 참조하여 Pod를 생성하였다. 생성된 Pods의 상태를 보려면 `get` 명령어를 사용하면 되고 더 자세한 정보를 보려면  `describe` 명령어를 사용하면 된다. 위의 manifest파일에서 정의되지 않은 속성들은 kubernetes에서 자동으로 채워넣는다. kubernetes에서 가지고 있는 모든속성에 대한 정보를 보려면 `get` 명령어에 `-o` 옵션을 넣어 yaml이라든지 json으로 출력하면 된다.
+
+이번에는 배포된 Pod에 접근하여 명령어를 실행해보자.
+```bash
+$ kubectl exec mingle-pod ls /usr/share/nginx/html
+50x.html
+index.html
+
+$ kubectl exec mingle-pod -it bash
+root@mingle-pod:/# ls /usr/share/nginx/html/
+50x.html  index.html
+
+$ kubectl exec mingle-pod -c mingle-web ls /usr/share/nginx/html
+50x.html
+index.html
+```
+`kubectl exec` 명령어를 통해 Pod에 접속해 html 파일들을 볼 수 있다. 만약 Pod에 로그인하여 명령어를 실행하고 싶은 경우 `-it` 옵션을 사용하여 접속할 수 있다. `-it`의 `i`는 Interactive의 간략한 표현으로 Pod안의 STDIN과 STDOUT을 `t` 터미널의 STDIN과 STDOUT로 연결한다는 의미이다.  마지막으로 Pod안에 여러개의 container가 배포된 경우에는 -c 옵션으로 container의 이름을 적어 특정한 container로 접속할 수 있다.
+
+마지막으로 Pod의 log 보는 방법과 Pod를 지우는 방법을 알아보자.
+```bash
+$ kubectl port-forward mingle-pod 80
+Forwarding from 127.0.0.1:80 -> 80
+Forwarding from [::1]:80 -> 80
+
+$ curl localhost:80
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+....
+
+$ kubectl logs mingle-pod
+127.0.0.1 - - [26/Mar/2020:14:15:12 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.58.0" "-"
+
+$ kubectl delete pods mingle-pod
+pod "mingle-pod" deleted
+```
+`kubectl port-forward`를 사용하여 해당 Pod에 80번 포트를 열어 접근하게 만든 다음 `curl` 명령어를 통해 접근하면 `kubectl logs` 명령어를 통해 Pod의 로그를 확인해 볼 수 있다. 마지막으로 `kubectl delete`를 사용하여 Pod를 삭제해 보았다.
