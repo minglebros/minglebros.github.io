@@ -10,6 +10,18 @@ MinSik Kim:
       icon: "fas fa-fw fa-link"
       url: "https://minglebros.github.io"
 
+ChanHo Park:
+  name        : "Bardem"
+  bio         : "Hope is not a strategy"
+  avatar      : "/assets/images/chanho.jpg"
+  links:
+    - label: "Email"
+      icon: "fas fa-fw fa-envelope-square"
+      url: "mailto:chanho3114@gmail.com"
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://minglebros.github.io"
+
 Kubernetes:
   name        : "Kubernetes"
   bio         : "Let's deep dive into kubernetes"

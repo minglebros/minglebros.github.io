@@ -112,8 +112,8 @@ author:
 # Site Footer
 footer:
   links:
-    - label: "GitLab"
-      icon: "fab fa-fw fa-gitlab"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
       url: "https://github.com/minglebros"
 
 
