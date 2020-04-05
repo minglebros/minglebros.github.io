@@ -1,5 +1,5 @@
 ---
-title:  "Golang Automated Test"
+title:  "Golang Simple Unit Test"
 excerpt: "Golang에서 어떻게 Unit 테스트를 개발하는지 살펴보자"
 
 categories:
@@ -10,11 +10,13 @@ tags:
   - Golang
   - test-driven
   - testing
+  - simple
+  - unit test
 classes: wide
 last_modified_at: 2020-03-14T20:00:00
 ---
 
-## Golang Automated Test
+## Golang Simple Unit Test
 
  자동 테스트는 기본 프로그램의 구성 요소를 실행하고 예상대로 작동하는지 확인하는 별도의 프로그램이다.
   자동 테스트는 코드를 변경 한 후에도 프로그램 구성 요소가 올바르게 작동하는지 확인한다. Go의 테스트 패키지 및 Go 테스트 도구를 사용하면 자동 테스트를 쉽게 작성할 수 있다. 자동화 테스트를 통해 메뉴얼하게 테스트하는 시간을 줄이고 더 철저하게 테스트를 할 수 있다.
